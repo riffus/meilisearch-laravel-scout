@@ -1,5 +1,5 @@
 {
-    "name": "meilisearch/meilisearch-laravel-scout",
+    "name": "riffus/meilisearch-laravel-scout",
     "description": "Laravel Scout custom engine for MeiliSearch",
     "keywords": ["meilisearch", "laravel", "scout", "search"],
     "type": "library",

@@ -3,6 +3,7 @@
 namespace Meilisearch\Scout\Engines;
 
 use Laravel\Scout\Builder;
+use Meilisearch\Scout\Builders\MeilisearchBuilder;
 use Laravel\Scout\Engines\Engine;
 use MeiliSearch\Client as Meilisearch;
 
@@ -143,9 +144,7 @@ class MeilisearchEngine extends Engine
      */
     protected function filters(Builder $builder)
     {
-        return collect($builder->wheres)->map(function ($value, $key) {
-            return $key . '=' . '"'.$value.'"';
-        })->values()->implode(' AND ');
+        return implode(' AND ', $builder->wheres );
     }
 
     /**
