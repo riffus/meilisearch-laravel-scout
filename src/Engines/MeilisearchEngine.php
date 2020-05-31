@@ -6,6 +6,8 @@ use Laravel\Scout\Builder;
 use Meilisearch\Scout\Builders\MeilisearchBuilder;
 use Laravel\Scout\Engines\Engine;
 use MeiliSearch\Client as Meilisearch;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class MeilisearchEngine extends Engine
 {
@@ -57,7 +59,11 @@ class MeilisearchEngine extends Engine
         })->filter()->values()->all();
 
         if (!empty($objects)) {
-            $index->addDocuments($objects, $models->first()->getKeyName());
+            try {
+                $index->addDocuments($objects, $models->first()->getKeyName());
+            } catch (Exception $e) {
+                Log::error('Meilisearch error, check server status.');
+            }
         }
     }
 
@@ -72,11 +78,16 @@ class MeilisearchEngine extends Engine
     {
         $index = $this->meilisearch->getIndex($models->first()->searchableAs());
 
-        $index->deleteDocuments(
-            $models->map->getScoutKey()
-                ->values()
-                ->all()
-        );
+        try {
+            $index->deleteDocuments(
+                $models->map->getScoutKey()
+                    ->values()
+                    ->all()
+            );
+        } catch (Exception $e) {
+            Log::error('Meilisearch error, check server status.');
+        }
+
     }
 
     /**
@@ -216,7 +227,12 @@ class MeilisearchEngine extends Engine
     {
         $index = $this->meilisearch->getIndex($model->searchableAs());
 
-        $index->deleteAllDocuments();
+        try {
+            $index->deleteAllDocuments();
+        } catch (Exception $e) {
+            Log::error('Meilisearch error, check server status.');
+        }
+
     }
 
     /**
